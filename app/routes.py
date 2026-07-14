@@ -17,7 +17,7 @@ def create_note(
 def get_notes(db:Session = Depends(get_db)):
     return crud.get_note(db)
 @router.get("/{note_id}",response_model=schemas.NoteResponse)
-def get_note(note_id:int ,db:Session = Depends(get_db)):
+def get_note_id(note_id:int ,db:Session = Depends(get_db)):
     note=crud.get_note_id(db,note_id)
     if note is None :
         raise HTTPException(
@@ -25,3 +25,16 @@ def get_note(note_id:int ,db:Session = Depends(get_db)):
             detail="Note not found"
         )
     return note 
+@router.put("/{note_id}",response_model=schemas.NoteResponse)
+def update_note(
+    note_id :int,
+    note:schemas.NoteUpdate,
+    db: Session = Depends(get_db)
+):
+    updated_note = crud.update_note(db,note_id,note)
+    if update_note is None :
+       raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail="Note not found"
+        )
+    return update_note 
