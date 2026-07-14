@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Depends,status,HTTPException
+from fastapi import APIRouter,Depends,status,HTTPException,Response
 from sqlalchemy.orm import Session
 from app import crud,schemas
 from app.dependency import get_db
@@ -38,3 +38,14 @@ def update_note(
             detail="Note not found"
         )
     return update_note 
+@router.delete("/{note_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_note(note_id:int , db : Session = Depends(get_db)):
+    deleted_note =  crud.delete_note(db,note_id)
+
+    if deleted_note is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Note not found"
+        )
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

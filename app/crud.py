@@ -22,3 +22,10 @@ def update_note(db:Session, note_id:int,note:schemas.NoteUpdate):
     db.commit()
     db.refresh(db_note)
     return db_note
+def delete_note(db:Session,note_id:int):
+  db_note =db.query(models.Note).filter(models.Note.id== note_id).first()
+  if db_note is None:
+      return None
+  db.delete(db_note)
+  db.commit()
+  return db_note
