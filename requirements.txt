@@ -1,1 +1,7 @@
-pip install fastapi uvicorn sqlalchemy psycopg2-binary python-dotenv alembic
+ fastapi
+ uvicorn
+ sqlalchemy 
+ psycopg2-binary
+ python-dotenv
+ alembic
+ pydantic
