@@ -14,8 +14,8 @@ def create_note(
 ):
     return crud.create_note(db,note)
 @router.get("/",response_model=list[schemas.NoteResponse])
-def get_notes( search: str = Query(default=""),db:Session = Depends(get_db)):
-    return crud.get_note(db,search)
+def get_notes( search: str = Query(default=""),page : int = Query(default=1,ge=1),limit : int = Query(default=10,ge=1,le=100),db:Session = Depends(get_db)):
+    return crud.get_note(db,search,page,limit)
 @router.get("/{note_id}",response_model=schemas.NoteResponse)
 def get_note_id(note_id:int ,db:Session = Depends(get_db)):
     note=crud.get_note_id(db,note_id)
