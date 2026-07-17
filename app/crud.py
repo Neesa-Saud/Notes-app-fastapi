@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app import schemas, models
+from sqlalchemy import or_
 def create_note(db:Session,note: schemas.NoteCreate):
     db_note = models.Note(
         title = note.title,
@@ -9,8 +10,16 @@ def create_note(db:Session,note: schemas.NoteCreate):
     db.commit()
     db.refresh(db_note) #changes seen after this 
     return db_note
-def get_note( db:Session):
-    return db.query(models.Note).all
+def get_note( db:Session,search : str = ""):
+    query =  db.query(models.Note)
+    if search :
+        query = query.filter(
+            or_( #returns the row where either condition is true
+                 models.Note.title.ilike(f"%{search}%"),
+                models.Note.content.ilike(f"%{search}%")
+            )
+        )
+    return query.all()
 def get_note_id(db:Session,note_id:int):
     return db.query(models.Note).filter(models.Note.id== note_id).first()
 def update_note(db:Session, note_id:int,note:schemas.NoteUpdate):
